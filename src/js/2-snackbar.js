@@ -3,63 +3,40 @@ import "izitoast/dist/css/iziToast.min.css";
 
 
 const form = document.querySelector(".form");
-const delay = document.querySelector('input[name="delay"]')
-const field = document.querySelector("fieldset");
 
-const btn = document.querySelector("button");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-const radio = document.querySelectorAll('input[name="state"]')
+  const form = e.target;
+  const delay = Number(form.elements.delay.value);
+  const state = form.elements.state.value;
 
+  const prm = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      state === "fulfilled" ? resolve(delay) : reject(delay);
+        }, delay);
+    });
 
-
-
-
-btn.addEventListener("click", (e)=> {
-
-e.preventDefault();
-let ifOk = false
-if (radio[0].checked) {
-  ifOk = true; 
-} 
-
-const tm = delay.value;
-
-const prm = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    if (ifOk) {
-      resolve("Success! Value passed to resolve function");
-    } else {
-      reject("Error! Error passed to reject function");
-    }
-  }, tm);
-});
-prm
-.then(value => {
-    const SuccessText = `✅ Fulfilled promise in ${tm}ms`
-    console.log(SuccessText)
-    iziToast.show({
-      backgroundColor: 'rgba(89, 161, 13, 1)',
-      messageColor: `rgba(255, 255, 255, 1)`,
-      close: `false`,
-      position: "topRight",
-      message: SuccessText
-});
-  })
-  .catch(error => {
-     const RejectedText = `❌ Rejected promise in ${tm} ms`
-    iziToast.show({
-      backgroundColor: 'rgba(239, 64, 64, 1)',
-      messageColor: `rgba(255, 255, 255, 1)`,
-      close: `false`,
-      position: "topRight",
-      message: RejectedText
-});
+  prm
+  .then(delay => {
+        
+      iziToast.show({
+        backgroundColor: 'rgba(89, 161, 13, 1)',
+        messageColor: `rgba(255, 255, 255, 1)`,
+        close: `false`,
+        position: "topRight",
+        message: `✅ Fulfilled promise in ${delay}ms`
   });
-form.reset()
-})
-
-
-
-
-
+    })
+    .catch(delay => {
+      iziToast.show({
+        backgroundColor: 'rgba(239, 64, 64, 1)',
+        messageColor: `rgba(255, 255, 255, 1)`,
+        close: `false`,
+        position: "topRight",
+        message: `❌ Rejected promise in ${delay} ms`
+  });
+    });
+  form.reset()
+  })
 
